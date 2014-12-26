@@ -52,6 +52,8 @@ tape('simple', function (t) {
 
   t.equal(nonPrivate(vps), '176.58.117.63')
   t.equal(nonPrivate(laptop), undefined)
+  t.equal(nonPrivate.private(vps), 'fe80::f03c:91ff:fe56:9728')
+  t.equal(nonPrivate.private(laptop), '192.168.1.41')
   t.end()
 
 })
