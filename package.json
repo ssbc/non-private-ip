@@ -7,7 +7,9 @@
     "type": "git",
     "url": "git://github.com/dominictarr/non-private-ip.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ip": "~0.3.2"
+  },
   "devDependencies": {
     "tape": "~3.0.3"
   },
