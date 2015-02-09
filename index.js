@@ -19,8 +19,6 @@ module.exports = function (inter, filter) {
       // find a reasonable looking address
       if(!e.internal && filter(e.address, e))
           return e.address
-      else
-        console.error(e)
     }
   }
 }
