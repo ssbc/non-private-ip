@@ -10,7 +10,7 @@ function isNonPrivate (e) {
 }
 
 
-module.exports = function (inter, filter) {
+var address = module.exports = function (inter, filter) {
   inter = inter || os.networkInterfaces()
   filter = filter || isNonPrivate
   for(var k in inter) {
@@ -23,25 +23,44 @@ module.exports = function (inter, filter) {
   }
 }
 
-module.exports.private = function (inter) {
-  return module.exports(inter, isPrivate)
+function isV4 (e) {
+  return e.family === 'IPv4'
 }
 
-module.exports.v4 = module.exports(null, function (addr, e) {
-  return e.family === 'IPv4' && isNonPrivate(addr)
+function isV6 (e) {
+  return e.family === 'IPv6'
+}
+
+var private = module.exports.private = function (inter) {
+  return address(inter, isPrivate)
+}
+
+module.exports.v4 = address(null, function (addr, e) {
+  return isV4(e) && isNonPrivate(addr)
 })
 
-module.exports.v6 = module.exports(null, function (addr, e) {
-  return e.family === 'IPv6' && isNonPrivate(addr)
+module.exports.v6 = address(null, function (addr, e) {
+  return isV6(e) && isNonPrivate(addr)
 })
+
+private.v4 = address(null, function (addr, e) {
+  return isV4(e) && isPrivate(addr)
+})
+
+private.v6 = address(null, function (addr, e) {
+  return isV6(e) && isPrivate(addr)
+})
+
+module.exports.all = {
+  public: {
+    v4: module.exports.v4, v6: module.exports.v6
+  },
+  private: {
+    v4: private.v4, v6: private.v6
+  }
+}
 
 
 if(!module.parent) {
-  var h = module.exports()
-  if(!h) {
-    console.error('no non-private address')
-    console.error('private:', module.exports.private())
-    process.exit(1)
-  }
-  console.log(h)
+  console.log(module.exports.all)
 }
