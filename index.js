@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 var os = require('os')
 var ip = require('ip')
 //pick the first reasonable looking host.
