@@ -32,7 +32,7 @@ function isV6 (e) {
   return e.family === 'IPv6'
 }
 
-var private = module.exports.private = function (inter) {
+var _private = module.exports.private = function (inter) {
   return address(inter, isPrivate)
 }
 
@@ -44,11 +44,11 @@ module.exports.v6 = address(null, function (addr, e) {
   return isV6(e) && isNonPrivate(addr)
 })
 
-private.v4 = address(null, function (addr, e) {
+_private.v4 = address(null, function (addr, e) {
   return isV4(e) && isPrivate(addr)
 })
 
-private.v6 = address(null, function (addr, e) {
+_private.v6 = address(null, function (addr, e) {
   return isV6(e) && isPrivate(addr)
 })
 
@@ -57,7 +57,7 @@ module.exports.all = {
     v4: module.exports.v4, v6: module.exports.v6
   },
   private: {
-    v4: private.v4, v6: private.v6
+    v4: _private.v4, v6: _private.v6
   }
 }
 
