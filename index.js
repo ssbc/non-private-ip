@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 var os = require('os')
 var ip = require('ip')
 //pick the first reasonable looking host.
@@ -59,9 +58,4 @@ module.exports.all = {
   private: {
     v4: _private.v4, v6: _private.v6
   }
-}
-
-
-if(!module.parent) {
-  console.log(module.exports.all)
 }
