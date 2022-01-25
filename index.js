@@ -9,13 +9,14 @@ function isNonPrivate(e) {
   return !isPrivate(e)
 }
 
-function address(inter, filter) {
+function address(inter, filter, details) {
   inter = inter || os.networkInterfaces()
   filter = filter || isNonPrivate
   let score = 0
   let candidate = undefined
   for (const k of Object.keys(inter)) {
     for (const e of inter[k]) {
+      e.interface = k
       // Must not be loopback:
       if (e.internal) continue
       // Must pass our filter:
@@ -24,42 +25,42 @@ function address(inter, filter) {
       // Prioritize IPv4 wlan:
       if (k.startsWith('wl') && e.family === 'IPv4' && score < 8) {
         score = 8
-        candidate = e.address
+        candidate = details ? e : e.address
       }
       // Prioritize IPv4 ethernet:
       else if (k.startsWith('en') && e.family === 'IPv4' && score < 7) {
         score = 7
-        candidate = e.address
+        candidate = details ? e : e.address
       }
       // Prioritize IPv4 OLD ethernet:
       else if (k.startsWith('eth') && e.family === 'IPv4' && score < 6) {
         score = 6
-        candidate = e.address
+        candidate = details ? e : e.address
       }
       // Prioritize wlan:
       else if (k.startsWith('wl') && e.family === 'IPv6' && score < 5) {
         score = 5
-        candidate = e.address + '%' + k
+        candidate = details ? e : e.address + '%' + k
       }
       // Prioritize ethernet:
       else if (k.startsWith('en') && e.family === 'IPv6' && score < 4) {
         score = 4
-        candidate = e.address + '%' + k
+        candidate = details ? e : e.address + '%' + k
       }
       // Prioritize OLD ethernet:
       else if (k.startsWith('eth') && e.family === 'IPv6' && score < 3) {
         score = 3
-        candidate = e.address + '%' + k
+        candidate = details ? e : e.address + '%' + k
       }
       // Prioritize IPv4 tunnels (VPN):
       else if (k.startsWith('tun') && e.family === 'IPv4' && score < 2) {
         score = 2
-        candidate = e.address
+        candidate = details ? e : e.address
       }
       // Prioritize tunnels (VPN):
       else if (k.startsWith('tun') && e.family === 'IPv6' && score < 1) {
         score = 1
-        candidate = e.address + '%' + k
+        candidate = details ? e : e.address + '%' + k
       }
     }
   }
