@@ -1,7 +1,7 @@
 {
   "name": "non-private-ip",
   "description": "see if you have a non private (i.e. public ip address)",
-  "version": "1.4.4",
+  "version": "2.0.0",
   "homepage": "https://github.com/dominictarr/non-private-ip",
   "repository": {
     "type": "git",
