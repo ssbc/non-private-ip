@@ -1,5 +1,6 @@
 const tape = require('tape')
 const nonPrivate = require('../')
+const ip = require('ip')
 
 const vps = {
   lo: [
@@ -39,5 +40,15 @@ tape('simple', function (t) {
   t.equal(nonPrivate(laptop), undefined)
   t.equal(nonPrivate.private(vps), 'fe80::f03c:91ff:fe56:9728%eth0')
   t.equal(nonPrivate.private(laptop), '192.168.1.61')
+  t.end()
+})
+
+tape('details', function (t) {
+  t.deepEqual(nonPrivate(laptop, ip.isPrivate, true), {
+    address: '192.168.1.61',
+    family: 'IPv4',
+    internal: false,
+    interface: 'wlp3s0',
+  })
   t.end()
 })
