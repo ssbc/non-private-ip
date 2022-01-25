@@ -1,22 +1,21 @@
-var os = require('os');
-var ip = require('ip');
+const os = require('os');
+const ip = require('ip');
 // pick the first reasonable looking host.
 // this should *just work* when running on a vps.
 
-var isPrivate = ip.isPrivate;
+const isPrivate = ip.isPrivate;
 
 function isNonPrivate(e) {
   return !isPrivate(e);
 }
 
-var address = (module.exports = function address(inter, filter) {
+const address = (module.exports = function address(inter, filter) {
   inter = inter || os.networkInterfaces();
   filter = filter || isNonPrivate;
-  var score = 0;
-  var candidate = undefined;
-  for (var k in inter) {
-    for (var i in inter[k]) {
-      var e = inter[k][i];
+  let score = 0;
+  let candidate = undefined;
+  for (const k of Object.keys(inter)) {
+    for (const e of inter[k]) {
 
       // Must not be loopback:
       if (e.internal) continue;
@@ -76,7 +75,7 @@ function isV6(e) {
   return e.family === 'IPv6';
 }
 
-var _private = (module.exports.private = function _private(inter) {
+const _private = (module.exports.private = function _private(inter) {
   return address(inter, isPrivate);
 });
 
