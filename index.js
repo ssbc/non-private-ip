@@ -9,7 +9,7 @@ function isNonPrivate(e) {
   return !isPrivate(e)
 }
 
-const address = (module.exports = function address(inter, filter) {
+function address(inter, filter) {
   inter = inter || os.networkInterfaces()
   filter = filter || isNonPrivate
   let score = 0
@@ -64,7 +64,11 @@ const address = (module.exports = function address(inter, filter) {
     }
   }
   return candidate
-})
+}
+
+function _private(inter) {
+  return address(inter, isPrivate)
+}
 
 function isV4(e) {
   return e.family === 'IPv4'
@@ -74,33 +78,22 @@ function isV6(e) {
   return e.family === 'IPv6'
 }
 
-const _private = (module.exports.private = function _private(inter) {
-  return address(inter, isPrivate)
-})
+// Functions
+module.exports = address
+module.exports.private = _private
 
-module.exports.v4 = address(null, function v4(addr, e) {
-  return isV4(e) && isNonPrivate(addr)
-})
-
-module.exports.v6 = address(null, function v6(addr, e) {
-  return isV6(e) && isNonPrivate(addr)
-})
-
-_private.v4 = address(null, function privateV4(addr, e) {
-  return isV4(e) && isPrivate(addr)
-})
-
-_private.v6 = address(null, function privateV6(addr, e) {
-  return isV6(e) && isPrivate(addr)
-})
-
+// Values
+module.exports.v4 = address(null, (adr, e) => isV4(e) && isNonPrivate(adr))
+module.exports.v6 = address(null, (adr, e) => isV6(e) && isNonPrivate(adr))
+module.exports.private.v4 = address(null, (adr, e) => isV4(e) && isPrivate(adr))
+module.exports.private.v6 = address(null, (adr, e) => isV6(e) && isPrivate(adr))
 module.exports.all = {
   public: {
     v4: module.exports.v4,
     v6: module.exports.v6,
   },
   private: {
-    v4: _private.v4,
-    v6: _private.v6,
+    v4: module.exports.private.v4,
+    v6: module.exports.private.v6,
   },
 }
