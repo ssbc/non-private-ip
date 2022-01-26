@@ -56,6 +56,11 @@ const laptop = {
   ],
 }
 
+const windows = {
+  Ethernet: [{ address: '192.168.1.41', family: 'IPv4', internal: false }],
+  'Wi-Fi': [{ address: '192.168.1.42', family: 'IPv4', internal: false }],
+}
+
 tape('simple', function (t) {
   t.equal(nonPrivate(vps), '176.58.117.63')
   t.equal(nonPrivate(laptop), undefined)
@@ -71,6 +76,21 @@ tape('details', function (t) {
     family: 'IPv4',
     internal: false,
     interface: 'wlp3s0',
+  })
+  t.end()
+})
+
+tape('windows', function (t) {
+  const previous = process.platform
+  Object.defineProperty(process, 'platform', {
+    value: 'win32',
+  })
+
+  t.equal(nonPrivate(windows), undefined, 'non private on windows')
+  t.equal(nonPrivate.private(windows), '192.168.1.42', 'private on windows')
+
+  Object.defineProperty(process, 'platform', {
+    value: previous,
   })
   t.end()
 })
