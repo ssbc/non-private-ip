@@ -18,6 +18,27 @@ const vps = {
   ],
 }
 
+const vps2 = {
+  lo: [
+    { address: '127.0.0.1', family: 'IPv4', internal: true },
+    { address: '::1', family: 'IPv6', internal: true },
+  ],
+  eth0: [
+    { address: '176.58.117.63', family: 'IPv4', internal: false },
+    {
+      address: '2a01:7e00::f03c:91ff:fe56:9728',
+      family: 'IPv6',
+      internal: false,
+    },
+    {
+      address: 'fe80::f03c:91ff:fe56:9728',
+      family: 'IPv6',
+      internal: false,
+      scopeid: 4,
+    },
+  ],
+}
+
 const laptop = {
   lo: [
     { address: '127.0.0.1', family: 'IPv4', internal: true },
@@ -39,6 +60,7 @@ tape('simple', function (t) {
   t.equal(nonPrivate(vps), '176.58.117.63')
   t.equal(nonPrivate(laptop), undefined)
   t.equal(nonPrivate.private(vps), 'fe80::f03c:91ff:fe56:9728%eth0')
+  t.equal(nonPrivate.private(vps2), 'fe80::f03c:91ff:fe56:9728%4')
   t.equal(nonPrivate.private(laptop), '192.168.1.61')
   t.end()
 })
