@@ -33,45 +33,67 @@ function address(inter, filter, details) {
       // Must pass our filter:
       if (!filter(e.address, e)) continue
 
-      // Prioritize IPv4 wlan:
-      if (k.startsWith('wl') && e.family === 'IPv4' && score < 8) {
-        score = 8
-        setCandidate(e)
-      }
-      // Prioritize IPv4 ethernet:
-      else if (k.startsWith('en') && e.family === 'IPv4' && score < 7) {
-        score = 7
-        setCandidate(e)
-      }
-      // Prioritize IPv4 OLD ethernet:
-      else if (k.startsWith('eth') && e.family === 'IPv4' && score < 6) {
-        score = 6
-        setCandidate(e)
-      }
-      // Prioritize wlan:
-      else if (k.startsWith('wl') && e.family === 'IPv6' && score < 5) {
-        score = 5
-        setCandidate(e)
-      }
-      // Prioritize ethernet:
-      else if (k.startsWith('en') && e.family === 'IPv6' && score < 4) {
-        score = 4
-        setCandidate(e)
-      }
-      // Prioritize OLD ethernet:
-      else if (k.startsWith('eth') && e.family === 'IPv6' && score < 3) {
-        score = 3
-        setCandidate(e)
-      }
-      // Prioritize IPv4 tunnels (VPN):
-      else if (k.startsWith('tun') && e.family === 'IPv4' && score < 2) {
-        score = 2
-        setCandidate(e)
-      }
-      // Prioritize tunnels (VPN):
-      else if (k.startsWith('tun') && e.family === 'IPv6' && score < 1) {
-        score = 1
-        setCandidate(e)
+      if (process.platform === 'win32') {
+        if (k.includes('Wi-Fi') && e.family === 'IPv4' && score < 4) {
+          score = 4
+          setCandidate(e)
+        } else if (k.includes('Ethernet') && e.family === 'IPv4' && score < 3) {
+          score = 3
+          setCandidate(e)
+        } else if (k.includes('Wi-Fi') && e.family === 'IPv6' && score < 2) {
+          score = 2
+          setCandidate(e)
+        } else if (k.includes('Ethernet') && e.family === 'IPv6' && score < 1) {
+          score = 1
+          setCandidate(e)
+        } else if (score === 0) {
+          setCandidate(e)
+        }
+      } else {
+        // Prioritize IPv4 wlan:
+        if (k.startsWith('wl') && e.family === 'IPv4' && score < 8) {
+          score = 8
+          setCandidate(e)
+        }
+        // Prioritize IPv4 ethernet:
+        else if (k.startsWith('en') && e.family === 'IPv4' && score < 7) {
+          score = 7
+          setCandidate(e)
+        }
+        // Prioritize IPv4 OLD ethernet:
+        else if (k.startsWith('eth') && e.family === 'IPv4' && score < 6) {
+          score = 6
+          setCandidate(e)
+        }
+        // Prioritize wlan:
+        else if (k.startsWith('wl') && e.family === 'IPv6' && score < 5) {
+          score = 5
+          setCandidate(e)
+        }
+        // Prioritize ethernet:
+        else if (k.startsWith('en') && e.family === 'IPv6' && score < 4) {
+          score = 4
+          setCandidate(e)
+        }
+        // Prioritize OLD ethernet:
+        else if (k.startsWith('eth') && e.family === 'IPv6' && score < 3) {
+          score = 3
+          setCandidate(e)
+        }
+        // Prioritize IPv4 tunnels (VPN):
+        else if (k.startsWith('tun') && e.family === 'IPv4' && score < 2) {
+          score = 2
+          setCandidate(e)
+        }
+        // Prioritize tunnels (VPN):
+        else if (k.startsWith('tun') && e.family === 'IPv6' && score < 1) {
+          score = 1
+          setCandidate(e)
+        }
+        // Allow everything else
+        else if (score === 0) {
+          setCandidate(e)
+        }
       }
     }
   }
