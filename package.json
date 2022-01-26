@@ -11,11 +11,12 @@
     "ip": "^1.1.5"
   },
   "devDependencies": {
-    "tape": "~3.0.3"
+    "tap-spec": "^5.0.0",
+    "tape": "~5.4.1"
   },
   "scripts": {
     "prepublish": "npm ls &&  npm test",
-    "test": "set -e; for t in test/*.js; do node $t; done"
+    "test": "tape test/index.js | tap-spec"
   },
   "bin": "./bin.js",
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
